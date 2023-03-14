@@ -6,7 +6,6 @@ import path from "path";
 dotenv.config()
 const port = process.env.PORT || 3001;
 
-
 const app = express()
 const server = http.createServer(app)
 
@@ -16,7 +15,9 @@ app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, "../", "public/index.html"))
 })
 
-
+app.get('/api', (req: Request, res: Response) => {
+    res.status(200).send("Refer to documentation for all /api routes")
+})
 
 
 server.listen(port, () => {
