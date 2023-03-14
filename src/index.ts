@@ -2,12 +2,19 @@ import express, { Request, Response } from "express"
 import dotenv from "dotenv"
 import http from "http"
 import path from "path";
+import { connectToDb } from "./db";
 
 dotenv.config()
 const port = process.env.PORT || 3001;
 
 const app = express()
 const server = http.createServer(app)
+
+// Attempt to connect to DB
+connectToDb().then(() => {
+    console.log("Connected successfully")
+})
+
 
 app.use(express.static(path.join(__dirname, "../", "public")))
 
