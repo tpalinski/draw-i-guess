@@ -1,0 +1,19 @@
+{
+  "name": "draw-i-guess",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tpalinski/draw-i-guess.git"
+  },
+  "author": "Tymoteusz Paliński, Anna Zhurba",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tpalinski/draw-i-guess/issues"
+  },
+  "homepage": "https://github.com/tpalinski/draw-i-guess#readme"
+}
