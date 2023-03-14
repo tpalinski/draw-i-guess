@@ -23,8 +23,14 @@ export async function connectToDb() {
     }
 }
 
-export function registerRoom(name: string, password: string){
-    
+export async function registerRoom(name: string, password: string){
+    let encryptedPassword = await encryptPassword(password);
+    let insertObject = {roomId: name, password: encryptedPassword}
+    try {
+        await roomsCollection.insertOne(insertObject)
+    } catch(e) {
+        console.error(e)
+    }
 }
 
 async function encryptPassword(password: string, salt: number = 10): Promise<string> {

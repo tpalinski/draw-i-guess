@@ -2,7 +2,7 @@ import express, { Request, Response } from "express"
 import dotenv from "dotenv"
 import http from "http"
 import path from "path";
-import { connectToDb } from "./db";
+import { connectToDb, registerRoom } from "./db";
 
 dotenv.config()
 const port = process.env.PORT || 3001;
@@ -23,6 +23,12 @@ app.get('/', (req: Request, res: Response) => {
 
 app.get('/api', (req: Request, res: Response) => {
     res.status(200).send("Refer to documentation for all /api routes")
+})
+
+app.get('/insertUser', async (req: Request, res: Response) => {
+    
+    await registerRoom("Test Room", "Haslo"); 
+    res.sendFile(path.join(__dirname, "../", "public/index.html"))
 })
 
 server.listen(port, () => {
