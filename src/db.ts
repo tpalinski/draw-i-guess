@@ -14,7 +14,6 @@ const client = new MongoClient(connectionString);
 const db = client.db("kalambury")
 let roomsCollection = db.collection("rooms");
 
-
 export async function connectToDb() {
     try{
         await client.connect()
@@ -36,4 +35,14 @@ export async function registerRoom(name: string, password: string){
 async function encryptPassword(password: string, salt: number = 10): Promise<string> {
     let res: string = await bcrypt.hash(password, salt);
     return res;
+}
+
+
+export async function removeRoom(roomName: string) {
+    let query = {roomId: roomName}
+    try{
+        await roomsCollection.findOneAndDelete(query); 
+    } catch(e) {
+        console.error(e)
+    }
 }
