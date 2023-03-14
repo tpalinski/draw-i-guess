@@ -15,7 +15,6 @@ connectToDb().then(() => {
     console.log("Connected successfully")
 })
 
-
 app.use(express.static(path.join(__dirname, "../", "public")))
 
 app.get('/', (req: Request, res: Response) => {
@@ -25,7 +24,6 @@ app.get('/', (req: Request, res: Response) => {
 app.get('/api', (req: Request, res: Response) => {
     res.status(200).send("Refer to documentation for all /api routes")
 })
-
 
 server.listen(port, () => {
     console.log(`App is running on port ${port}`)
