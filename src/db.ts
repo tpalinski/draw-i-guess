@@ -46,3 +46,21 @@ export async function removeRoom(roomName: string) {
         console.error(e)
     }
 }
+
+export async function getAccessToRoom(name: string, password: string) : Promise<boolean>{
+    let query = {roomId: name}
+    try{
+        let room = await roomsCollection.findOne(query);
+        if(room!=null){
+           let encryptedPassword = room.password;
+           return await bcrypt.compare(password, encryptedPassword) 
+        } else {
+          return false; 
+        }
+    } catch(e) {
+        console.error(e);
+        return false;
+    }
+}
+
+
