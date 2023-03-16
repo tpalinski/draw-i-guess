@@ -78,4 +78,13 @@ export async function checkForRoom(roomName: string) : Promise<boolean> {
     }
 }
 
-
+// Generate unique room key, used for validating one-time connection requests
+export function generateRoomKey(): string {
+    const KEY_LENGTH = 10
+    let key: string = ""
+    let characters: string = "qwertyuiopasdfghjklzxcvbnm1234567890"
+    for (let i = 0; i<KEY_LENGTH; i++){
+        key += characters[Math.floor(Math.random() * characters.length - 1)] 
+    } 
+    return key
+}
