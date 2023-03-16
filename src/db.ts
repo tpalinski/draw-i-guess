@@ -63,4 +63,15 @@ export async function getAccessToRoom(name: string, password: string) : Promise<
     }
 }
 
+export async function checkForRoom(roomName: string) : Promise<boolean> {
+    let query = {roomId: roomName}
+    try{
+        let room = await roomsCollection.findOne(query);
+        return room != null;
+    } catch(e){
+        console.error(e)
+        return false
+    }
+}
+
 
