@@ -22,6 +22,7 @@ export async function connectToDb() {
     }
 }
 
+// Add room to database
 export async function registerRoom(name: string, password: string){
     let encryptedPassword = await encryptPassword(password);
     let insertObject = {roomId: name, password: encryptedPassword}
@@ -32,12 +33,13 @@ export async function registerRoom(name: string, password: string){
     }
 }
 
+// Helper function for password encryption using bcrypt
 async function encryptPassword(password: string, salt: number = 10): Promise<string> {
     let res: string = await bcrypt.hash(password, salt);
     return res;
 }
 
-
+// Delete room from database on host disconnection
 export async function removeRoom(roomName: string) {
     let query = {roomId: roomName}
     try{
@@ -47,6 +49,7 @@ export async function removeRoom(roomName: string) {
     }
 }
 
+// Authenticate room connection
 export async function getAccessToRoom(name: string, password: string) : Promise<boolean>{
     let query = {roomId: name}
     try{
@@ -63,6 +66,7 @@ export async function getAccessToRoom(name: string, password: string) : Promise<
     }
 }
 
+// Check, whether room with specified roomName exists in database
 export async function checkForRoom(roomName: string) : Promise<boolean> {
     let query = {roomId: roomName}
     try{
