@@ -2,7 +2,7 @@ import express, { Request, Response } from "express"
 import dotenv from "dotenv"
 import http from "http"
 import path from "path";
-import { connectToDb, generateRoomKey, registerRoom, removeRoom } from "./db";
+import { connectToDb, registerRoom, removeRoom } from "./db";
 
 dotenv.config()
 const port = process.env.PORT || 3001;
@@ -18,8 +18,8 @@ connectToDb().then(() => {
 app.use(express.static(path.join(__dirname, "../", "public")))
 
 
-app.get('/api', (req: Request, res: Response) => {
-    res.status(200).send(generateRoomKey())
+app.get('/api', async (req: Request, res: Response) => {
+    res.status(200).send("Refer to the documentation for api routes") 
 })
 
 app.get('/insertUser', async (req: Request, res: Response) => {

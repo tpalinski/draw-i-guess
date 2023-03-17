@@ -25,7 +25,11 @@ export async function connectToDb() {
 // Add room to database
 export async function registerRoom(name: string, password: string){
     let encryptedPassword = await encryptPassword(password);
-    let insertObject = {roomId: name, password: encryptedPassword}
+    let roomKey = await generateRoomKey()
+    let insertObject = {
+        roomId: name, 
+        password: encryptedPassword, 
+        key: roomKey}
     try {
         await roomsCollection.insertOne(insertObject)
     } catch(e) {
@@ -33,11 +37,6 @@ export async function registerRoom(name: string, password: string){
     }
 }
 
-// Helper function for password encryption using bcrypt
-async function encryptPassword(password: string, salt: number = 10): Promise<string> {
-    let res: string = await bcrypt.hash(password, salt);
-    return res;
-}
 
 // Delete room from database on host disconnection
 export async function removeRoom(roomName: string) {
@@ -50,13 +49,15 @@ export async function removeRoom(roomName: string) {
 }
 
 // Authenticate room connection
-export async function getAccessToRoom(name: string, password: string) : Promise<boolean>{
+export async function getAccessToRoom(name: string, password: string, roomKey: string) : Promise<boolean>{
     let query = {roomId: name}
     try{
         let room = await roomsCollection.findOne(query);
         if(room!=null){
            let encryptedPassword = room.password;
-           return await bcrypt.compare(password, encryptedPassword) 
+           let encryptedKey = room.key;
+           return await bcrypt.compare(password, encryptedPassword) &&
+                    await bcrypt.compare(roomKey, encryptedKey)
         } else {
           return false; 
         }
@@ -79,12 +80,20 @@ export async function checkForRoom(roomName: string) : Promise<boolean> {
 }
 
 // Generate unique room key, used for validating one-time connection requests
-export function generateRoomKey(): string {
+ async function generateRoomKey(): Promise<string> {
     const KEY_LENGTH = 10
     let key: string = ""
     let characters: string = "qwertyuiopasdfghjklzxcvbnm1234567890"
     for (let i = 0; i<KEY_LENGTH; i++){
         key += characters[Math.floor(Math.random() * characters.length - 1)] 
-    } 
+    }
+    key = await bcrypt.hash(key, 10)
+    console.log(key)
     return key
+}
+
+// Helper function for password encryption using bcrypt
+async function encryptPassword(password: string, salt: number = 10): Promise<string> {
+    let res: string = await bcrypt.hash(password, salt);
+    return res;
 }
