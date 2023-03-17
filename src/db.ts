@@ -1,6 +1,7 @@
 import {MongoClient} from "mongodb"
 import dotenv from "dotenv"
 import bcrypt from "bcrypt"
+import { Room } from "./types"
 
 
 dotenv.config()
@@ -26,7 +27,7 @@ export async function connectToDb() {
 export async function registerRoom(name: string, password: string): Promise<string | null>{
     let encryptedPassword = await encryptPassword(password);
     let roomKey = await generateRoomKey()
-    let insertObject = {
+    let insertObject: Room = {
         roomId: name, 
         password: encryptedPassword, 
         key: roomKey}

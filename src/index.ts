@@ -4,12 +4,18 @@ import http from "http"
 import path from "path";
 import { connectToDb} from "./db";
 import { api } from "./routes";
+import bodyParser from 'body-parser';
+
 
 dotenv.config()
 const port = process.env.PORT || 3001;
 
 const app = express()
 const server = http.createServer(app)
+
+
+//configure middlewares
+app.use(bodyParser.json());
 
 // Attempt to connect to DB
 connectToDb().then(() => {
