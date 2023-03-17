@@ -2,7 +2,8 @@ import express, { Request, Response } from "express"
 import dotenv from "dotenv"
 import http from "http"
 import path from "path";
-import { connectToDb, registerRoom, removeRoom } from "./db";
+import { connectToDb} from "./db";
+import { api } from "./routes";
 
 dotenv.config()
 const port = process.env.PORT || 3001;
@@ -22,16 +23,7 @@ app.get('/api', async (req: Request, res: Response) => {
     res.status(200).send("Refer to the documentation for api routes") 
 })
 
-app.get('/insertUser', async (req: Request, res: Response) => {
-    await registerRoom("Test Room", "Haslo"); 
-    res.status(201).send("Successfully created room")
-})
-
-app.get('/deleteUser', async (req: Request, res: Response) => {
-    await removeRoom("Test Room"); 
-    res.status(201).send("Sucessfully deleted room")
-})
-
+app.use('/api', api)
 
 app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, "../", "public/index.html"))

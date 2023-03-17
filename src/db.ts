@@ -23,7 +23,7 @@ export async function connectToDb() {
 }
 
 // Add room to database
-export async function registerRoom(name: string, password: string){
+export async function registerRoom(name: string, password: string): Promise<string | null>{
     let encryptedPassword = await encryptPassword(password);
     let roomKey = await generateRoomKey()
     let insertObject = {
@@ -32,8 +32,10 @@ export async function registerRoom(name: string, password: string){
         key: roomKey}
     try {
         await roomsCollection.insertOne(insertObject)
+        return roomKey;
     } catch(e) {
         console.error(e)
+        return null;
     }
 }
 
@@ -48,22 +50,20 @@ export async function removeRoom(roomName: string) {
     }
 }
 
-// Authenticate room connection
-export async function getAccessToRoom(name: string, password: string, roomKey: string) : Promise<boolean>{
+// Authenticate room connection and return roomkey
+export async function getAccessToRoom(name: string, password: string) : Promise<string | null>{
     let query = {roomId: name}
     try{
         let room = await roomsCollection.findOne(query);
         if(room!=null){
            let encryptedPassword = room.password;
-           let encryptedKey = room.key;
-           return await bcrypt.compare(password, encryptedPassword) &&
-                    await bcrypt.compare(roomKey, encryptedKey)
+           return await bcrypt.compare(password, encryptedPassword) ? room.key : null 
         } else {
-          return false; 
+          return null; 
         }
     } catch(e) {
         console.error(e);
-        return false;
+        return null;
     }
 }
 
